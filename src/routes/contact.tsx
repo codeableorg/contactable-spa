@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   ActionFunction,
   Form,
@@ -6,7 +7,12 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { type Contact, getContact, updateContact } from "../contacts";
+import {
+  type Contact,
+  getContact,
+  updateContact,
+  deleteContact,
+} from "../contacts";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const id = params.id as string;
@@ -18,8 +24,14 @@ export const loader: LoaderFunction = async ({ params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const id = params.id as string;
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData) as unknown as Contact;
+  const intent = formData.get("intent");
 
+  if (intent === "delete") {
+    await deleteContact(id);
+    return redirect("/");
+  }
+
+  const updates = Object.fromEntries(formData) as unknown as Contact;
   await updateContact(id, updates);
 
   return redirect("/");
@@ -54,7 +66,6 @@ export default function Contact() {
             defaultValue={contact.firstName || ""}
           />
         </div>
-
         <div>
           <label className="block text-gray-700 mb-2">Last Name</label>
           <input
@@ -65,7 +76,6 @@ export default function Contact() {
             defaultValue={contact.lastName || ""}
           />
         </div>
-
         <div>
           <label className="block text-gray-700 mb-2">Email</label>
           <input
@@ -76,7 +86,6 @@ export default function Contact() {
             defaultValue={contact.email || ""}
           />
         </div>
-
         <div>
           <label className="block text-gray-700 mb-2">
             Avatar URL (optional)
@@ -88,13 +97,12 @@ export default function Contact() {
             defaultValue={contact.avatarUrl || ""}
           />
         </div>
-
         <div className="flex gap-2">
           <button
             type="submit"
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-600/90"
           >
-            Create Contact
+            Save Changes
           </button>
           <Link
             to="/"
@@ -103,6 +111,27 @@ export default function Contact() {
             Cancel
           </Link>
         </div>
+      </Form>
+
+      <Form
+        action={`/contacts/${contact.id}`}
+        method="POST"
+        className="mt-8"
+        onSubmit={(e) => {
+          if (
+            !window.confirm("Are you sure you want to delete this contact?")
+          ) {
+            e.preventDefault();
+          }
+        }}
+      >
+        <input type="hidden" name="intent" value="delete" />
+        <button
+          type="submit"
+          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+        >
+          Delete Contact
+        </button>
       </Form>
     </div>
   );

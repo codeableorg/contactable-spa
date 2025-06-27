@@ -65,3 +65,9 @@ export async function updateContact(
   const { contact }: { contact: Contact } = await response.json();
   return contact;
 }
+
+export async function deleteContact(id: Contact["id"]): Promise<void> {
+  await fetch(baseUrl + `/contacts/${id}`, {
+    method: "DELETE",
+  });
+}

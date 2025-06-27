@@ -2,7 +2,6 @@ import { Form, Link } from "react-router-dom";
 
 export default function New() {
   const error = null;
-  const contact: any = {};
 
   return (
     <div className="max-w-lg mx-auto">
@@ -22,7 +21,6 @@ export default function New() {
             name="firstName"
             required
             className="w-full p-2 border rounded-lg"
-            defaultValue={contact.firstName || ""}
           />
         </div>
 
@@ -33,7 +31,6 @@ export default function New() {
             name="lastName"
             required
             className="w-full p-2 border rounded-lg"
-            defaultValue={contact.lastName || ""}
           />
         </div>
 
@@ -44,7 +41,6 @@ export default function New() {
             name="email"
             required
             className="w-full p-2 border rounded-lg"
-            defaultValue={contact.email || ""}
           />
         </div>
 
@@ -56,7 +52,6 @@ export default function New() {
             type="url"
             name="avatarUrl"
             className="w-full p-2 border rounded-lg"
-            defaultValue={contact.avatarUrl || ""}
           />
         </div>
 
