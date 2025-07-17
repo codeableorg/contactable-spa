@@ -4,8 +4,11 @@ import { type Contact } from "../contacts";
 export default function Contact({ contact }: { contact: Contact }) {
   const fetcher = useFetcher();
 
+  const isLoading =
+    fetcher.state === "submitting" || fetcher.state === "loading";
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between">
+    <div className="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between relative">
       <div className="flex items-center gap-4">
         <img
           src={
@@ -25,11 +28,16 @@ export default function Contact({ contact }: { contact: Contact }) {
       >
         <button
           type="submit"
-          className="text-yellow-500 flex justify-center items-center pb-1 text-3xl"
+          className="text-red-500 flex justify-center items-center pb-1 text-3xl"
         >
-          {contact.isFavorite ? "★" : "☆"}
+          {contact.isFavorite ? "♥" : "♡"}
         </button>
       </fetcher.Form>
+      {isLoading && (
+        <span className="text-gray-500 text-xs absolute bottom-1 right-1">
+          Loading...
+        </span>
+      )}
     </div>
   );
 }
